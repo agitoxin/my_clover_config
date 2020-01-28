@@ -18,12 +18,45 @@
 
 DefinitionBlock ("", "SSDT", 2, "hack", "UIAC-ALL", 0)
 {
+    Device(_SB.EC)
+    {
+        Name(_HID, "EC000000")
+    }
+
+    Device(_SB.USBX)
+    {
+        Name(_ADR, 0)
+        Method (_DSM, 4)
+        {
+            If (!Arg2) { Return (Buffer() { 0x03 } ) }
+            Return (Package()
+            {
+                // these values from iMac17,1
+                "kUSBSleepPortCurrentLimit", 2100,
+                "kUSBSleepPowerSupply", 5100,
+                "kUSBWakePortCurrentLimit", 2100,
+                "kUSBWakePowerSupply", 5100,
+            })
+        }
+    }
+
     Device(UIAC)
     {
         Name(_HID, "UIA00000")
 
         Name(RMCF, Package()
         {
+            // USB Power Properties for Sierra (using USBInjectAll injection)
+            "AppleBusPowerController", Package()
+            {
+                // these values happen to be iMac14,2 values...
+                "kUSBSleepPortCurrentLimit", 2100,
+                "kUSBSleepPowerSupply", 4700,
+                "kUSBWakePortCurrentLimit", 2100,
+                "kUSBWakePowerSupply", 4700,
+            },
+            
+            // XHC overrides
             "8086_a12f", Package()
             {
                 "port-count", Buffer() { 26, 0, 0, 0 },
@@ -49,11 +82,12 @@ DefinitionBlock ("", "SSDT", 2, "hack", "UIAC-ALL", 0)
                         "UsbConnector", 3,
                         "port", Buffer() { 4, 0, 0, 0 },
                     },
-                    "HS05", Package()  // Back Row 3 Col 1 (USB 3.1 Gen 1)
-                    {
-                        "UsbConnector", 3,
-                        "port", Buffer() { 5, 0, 0, 0 },
-                    },
+                    // Disable due to 15 ports limitation
+                    //"HS05", Package()  // Back Row 3 Col 1 (USB 3.1 Gen 1)
+                    //{
+                    //    "UsbConnector", 3,
+                    //    "port", Buffer() { 5, 0, 0, 0 },
+                    //},
                     "HS06", Package()  // Back Row 3 Col 2 (USB 3.1 Gen 1)
                     {
                         "UsbConnector", 3,
@@ -64,21 +98,23 @@ DefinitionBlock ("", "SSDT", 2, "hack", "UIAC-ALL", 0)
                         "UsbConnector", 0,
                         "port", Buffer() { 7, 0, 0, 0 },
                     },
-                    "HS08", Package()  // Front Left 2 (USB 2.0)
+                    "HS08", Package()  // Front Left 2 (USB 2.0) -> WIFI/BT Card
                     {
-                        "UsbConnector", 0,
+                        "UsbConnector", 255,
                         "port", Buffer() { 8, 0, 0, 0 },
                     },
-                    "HS09", Package()  // Back Row 2 Col 2 (USB 2.0)
-                    {
-                        "UsbConnector", 0,
-                        "port", Buffer() { 9, 0, 0, 0 },
-                    },
-                    "HS10", Package()  // Back Row 2 Col 1 (USB 2.0)
-                    {
-                        "UsbConnector", 0,
-                        "port", Buffer() { 10, 0, 0, 0 },
-                    },
+                    // Disable due to 15 ports limitation
+                    //"HS09", Package()  // Back Row 2 Col 2 (USB 2.0)
+                    //{
+                    //    "UsbConnector", 0,
+                    //    "port", Buffer() { 9, 0, 0, 0 },
+                    //},
+                    // Disable due to 15 ports limitation
+                    //"HS10", Package()  // Back Row 2 Col 1 (USB 2.0)
+                    //{
+                    //    "UsbConnector", 0,
+                    //    "port", Buffer() { 10, 0, 0, 0 },
+                    //},
                     "HS11", Package()  // Back Row 1 Col 1 (USB 2.0)
                     {
                         "UsbConnector", 0,
@@ -88,16 +124,6 @@ DefinitionBlock ("", "SSDT", 2, "hack", "UIAC-ALL", 0)
                     {
                         "UsbConnector", 0,
                         "port", Buffer() { 12, 0, 0, 0 },
-                    },
-                    "HS13", Package()
-                    {
-                        "UsbConnector", 0,
-                        "port", Buffer() { 13, 0, 0, 0 },
-                    },
-                    "HS14", Package()
-                    {
-                        "UsbConnector", 0,
-                        "port", Buffer() { 14, 0, 0, 0 },
                     },
                     "SS01", Package()  // Back Row 4 Col 1 (USB 3.1 Gen 1)
                     {
@@ -119,51 +145,20 @@ DefinitionBlock ("", "SSDT", 2, "hack", "UIAC-ALL", 0)
                         "UsbConnector", 3,
                         "port", Buffer() { 20, 0, 0, 0 },
                     },
-                    "SS05", Package()  // Back Row 3 Col 1 (USB 3.1 Gen 1)
-                    {
-                        "UsbConnector", 3,
-                        "port", Buffer() { 21, 0, 0, 0 },
-                    },
+                    // Disable due to 15 ports limitation
+                    //"SS05", Package()  // Back Row 3 Col 1 (USB 3.1 Gen 1)
+                    //{
+                    //    "UsbConnector", 3,
+                    //    "port", Buffer() { 21, 0, 0, 0 },
+                    //},
                     "SS06", Package()  // Back Row 3 Col 2 (USB 3.1 Gen 1)
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 22, 0, 0, 0 },
                     },
-                    "USR1", Package()
-                    {
-                        "UsbConnector", 3,
-                        "port", Buffer() { 15, 0, 0, 0 },
-                    },
-                    "USR2", Package()
-                    {
-                        "UsbConnector", 3,
-                        "port", Buffer() { 16, 0, 0, 0 },
-                    },
                 },
             },
         })
-    }
-
-    Device(_SB.EC)
-    {
-        Name(_HID, "EC000000")
-    }
-
-    Device(_SB.USBX)
-    {
-        Name(_ADR, 0)
-        Method (_DSM, 4)
-        {
-            If (!Arg2) { Return (Buffer() { 0x03 } ) }
-            Return (Package()
-            {
-                // these values from iMac17,1
-                "kUSBSleepPortCurrentLimit", 2100,
-                "kUSBSleepPowerSupply", 5100,
-                "kUSBWakePortCurrentLimit", 2100,
-                "kUSBWakePowerSupply", 5100,
-            })
-        }
     }
 }
 //EOF

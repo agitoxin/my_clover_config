@@ -95,7 +95,7 @@
 					<key>Comment</key>
 					<string>Rename HDAS to HDEF</string>
 					<key>Disabled</key>
-					<false/>
+					<true/>
 					<key>Find</key>
 					<data>
 					SERBUw==
@@ -200,9 +200,7 @@
 			<key>PciRoot(0x0)/Pci(0x1f,0x3)</key>
 			<dict>
 				<key>layout-id</key>
-				<data>
-				BQAAAA==
-				</data>
+				<integer>7</integer>
 			</dict>
 		</dict>
 		<key>USB</key>
